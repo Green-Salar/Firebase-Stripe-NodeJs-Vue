@@ -24,6 +24,10 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
+    ],    "rewrites": [
+      {
+        "source": "**",
+        "function": "app"
+      }]
   }
 }
