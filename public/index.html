@@ -1,12 +1,282 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Design</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            overflow: auto;
+        }
+
+ 
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            resize: vertical;
+            font-size: 16px;
+        }
+
+        .options {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .submit-btn {
+            width: 150px;
+            height: 40px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #4caf50;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .center-container {
+            display: flex;
+            flex-direction: row; /* Changed from column to row */
+            align-items: start;  /* Changed from center to start */
+            justify-content: space-between; /* Added this line */
+            min-height: 100vh;
+            padding: 20px; /* Added some padding */
+        }
+        .text-area-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .result-area {
+            flex: 1;
+            background-color: white;
+            color: black;
+            border-radius: 8px;
+            padding: 10px;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px; /* Increased height */
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            resize: vertical;
+            font-size: 16px;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .print-btn {
+            margin-top: 10px;
+            cursor: pointer;
+            padding: 5px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .print-btn:hover {
+            background-color: #45a049;
+        }
+
+        @media screen and (max-width: 768px) {
+            .text-area-container {
+                padding: 0 15px;
+            }
+        }
+
+        @media print {
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-size: 12pt;
+        }
+
+        .center-container {
+            width: 100%;
+        }
+
+        .text-area-container, .results-container {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .result-area {
+            width: 100%;
+            max-width: 100%;
+            border: none;
+            padding: 0;
+        }
+
+        .print-btn, .result-title {
+            display: none; /* Hide elements that are not necessary for print */
+        }
+
+        textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            overflow: visible;
+            height: auto;
+            background-color: transparent;
+        }
+    }
+    </style>
 </head>
+
 <body>
-    <h1>Welcome to the Home Page!</h1>
-    <a href="/second">Go to the Second Page</a>
+
+    <div class="center-container">
+        <div class="text-area-container">
+            <textarea id="resume" placeholder="Paste your resume here..."></textarea>
+            <textarea id="jobDescription" placeholder="Paste the job description here..."></textarea>
+            <div class="options">
+                <div>
+                    <input type="checkbox" id="optimizeResume" checked/>
+                    <label for="optimizeResume">Optimize my resume</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="writeCoverLetter" checked />
+                    <label for="writeCoverLetter">Write my cover letter</label>
+                </div>
+            </div>
+            <button class="submit-btn" onclick="sendData()">
+                Submit <span class="loader"></span>
+            </button>
+
+            <div class="results-container">
+                <div class="result-area" id="optimizedResumeResult">
+                    <div class="result-title">Optimized Resume:</div>
+                    <textarea readonly></textarea>
+                    <button class="print-btn" onclick="printResumeF()">Print as PDF</button>
+                </div>
+
+                <div class="result-area" id="coverLetterResult">
+                    <div class="result-title">Cover Letter:</div>
+                    <textarea readonly></textarea>
+                    <button class="print-btn" onclick="printCoverLetterF()">Print as PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let printResume= "";
+        let printCoverLetter = "";
+        function sendData() {
+            document.querySelector(".loader").style.display = "inline-block";
+
+            const resume = document.getElementById("resume").value;
+            const jobDescription = document.getElementById("jobDescription").value;
+            const optimizeResume = document.getElementById("optimizeResume").checked;
+            const writeCoverLetter = document.getElementById("writeCoverLetter").checked;
+
+            const data = {
+                resume: resume,
+                jobDescription: jobDescription,
+                optimizeResume: optimizeResume,
+                writeCoverLetter: writeCoverLetter
+            };
+
+            fetch("http://localhost:3001/chatTest", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    document.querySelector(".loader").style.display = "none";
+
+                    if (data.optimizedResume) {
+                        document.getElementById("optimizedResumeResult").querySelector("textarea").value = data.optimizedResume;
+                        document.getElementById("optimizedResumeResult").style.display = 'block';
+                        printResume = data.optimizedResume;
+                    }
+                    if (data.coverLetter) {
+                        document.getElementById("coverLetterResult").querySelector("textarea").value = data.coverLetter;
+                        document.getElementById("coverLetterResult").style.display = 'block';
+                        printCoverLetter = data.coverLetter;
+                    }
+                })
+                .catch((error) => {
+                    document.querySelector(".loader").style.display = "none";
+                    alert("Error processing the data. Please try again.");
+                    console.error("Error:", error);
+                });
+        }
+
+        function printCoverLetterF() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write('<pre>' + printCoverLetter + '</pre>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+        function printResumeF() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write('<pre>' + printResume + '</pre>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
 </body>
+
 </html>
