@@ -24,10 +24,16 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],    "rewrites": [
+    ],  "rewrites": [
+      {
+        "source": "/chatTest",
+        "function": "app"
+      },
       {
         "source": "**",
-        "function": "app"
-      }]
+        "destination": "/index.html"
+      }
+    ]
+    
   }
 }
