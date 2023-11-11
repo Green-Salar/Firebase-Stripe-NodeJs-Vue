@@ -1,9 +1,9 @@
-const express = require("express");
-const OpenAI = require("openai");
-const cors = require("cors");
+import express from "express";
+import {OpenAI} from "openai";
+import cors from "cors";
+import * as functions from "firebase-functions";
 
-
-const functions = require("firebase-functions");
+// Fetch the API key from Firebase functions configuration
 const apiKey = functions.config().api.openai_secretkey;
 
 const app = express();
@@ -123,5 +123,5 @@ app.post("/chatTest", async (req, res) => {
   }
 });
 
-// Export the API as a function
-exports.api = functions.https.onRequest(app);
+// Export the API as a Firebase function
+export const api = functions.https.onRequest(app);
