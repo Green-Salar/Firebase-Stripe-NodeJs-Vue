@@ -235,7 +235,7 @@
                 writeCoverLetter: writeCoverLetter
             };
             console.log(data);
-            fetch("/chatTest", {
+            fetch("https://us-central1-chatgptbase.cloudfunctions.net/api/chatTest", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
